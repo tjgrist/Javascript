@@ -1,15 +1,6 @@
 "use strict"
 
-var readline = require('readline');
-
-var rli = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
 var tree = new Tree(15);
-tree.loadTree();
-tree.findNode(18);
 
 function Node(inputNumber){
 	this.value = inputNumber;
@@ -19,6 +10,14 @@ function Node(inputNumber){
 function Tree(firstNodeValue){
     this.headNode = new Node(firstNodeValue);
     console.log("headnode: ", this.headNode.value);
+
+    this.loadTree = function(){
+    	var nums = [3,5,14,15,21,11,7,2,1,4,6,16,17,18,19,36];
+		for(var i in nums){
+			tree.addNode(nums[i])
+		}
+		tree.findNode(nums[6]);
+    }
 
     this.addNode = function(value){
         var currentNode = this.headNode;
@@ -32,6 +31,7 @@ function Tree(firstNodeValue){
                 if (value <= currentNode.value){
                     if (currentNode.leftNode == null){
                         currentNode.leftNode = new Node(value);
+                        console.log(value + " was added to the left of " + currentNode.value);
                         isAdded = true;
                     }
                     else{
@@ -41,6 +41,7 @@ function Tree(firstNodeValue){
                 else if (value >= currentNode.value){
                     if (currentNode.rightNode == null){
                         currentNode.rightNode = new Node(value);
+                        console.log(value + " was added to the right of " + currentNode.value);
                         isAdded = true;
                     }
                     else{
@@ -76,38 +77,41 @@ function Tree(firstNodeValue){
             }
         }while( found != true);
     }
-    this.loadTree = function(){
-    	var nums = [3,5,14,15,21,11,7,2,1,4,6,16,17,18,19,36];
-		for(var i = 0; i < nums.length; i++){
-			tree.addNode(nums[i])
-		}
-    }
     this.balanceTree = function(){
         var balanced = false;
         var currentNode = this.headNode;
-        var currentNodeLeft;
-        var currentNodeRight;
-        var nodeArray = [currentNode.value];
         while (currentNode.leftNode != null){
         	currentNode = currentNode.leftNode;
         }
         this.headNode = currentNode;
         //if (currentNode.)
 	}
-}			
+}	
 
-var getUserTree = function(tree){
-	rli.question('>>>', function(answer) {
+function startReadline(){
+	var readline = require('readline');
+
+	var rli = readline.createInterface({
+	  input: process.stdin,
+	  output: process.stdout
+	});
+	return rli;
+}
+
+var getUserTree = function(tree, rli){
+	rli.question('', function(answer) {
   	if (answer === 'q'){
   		return rli.close();
   	}
   	else {
   		tree.addNode(answer);
-  		getUserTree(tree);
+  		getUserTree(tree, rli);
   	}
 });
 }
-getUserTree(tree);
-tree.findNode(61);
+var rli = startReadline();
+getUserTree(tree, rli);
+
+tree.loadTree();
 
 //tree.balanceTree();
